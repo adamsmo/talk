@@ -2,10 +2,7 @@ package talk
 
 import java.math.BigInteger
 
-import org.bouncycastle.crypto.params.{
-  ECPrivateKeyParameters,
-  ECPublicKeyParameters
-}
+import org.bouncycastle.crypto.params.{ECPrivateKeyParameters, ECPublicKeyParameters}
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -26,6 +23,11 @@ object Main {
 
     println(s"r ${signature.r}")
     println(s"s ${signature.s}")
+    println
+    println
+    println(s"${token.timestamp}:${token.id}:${signature.r}:${signature.s}")
+    println
+    println
 
     val valid = SigningService.verify(token.bytesForSigning, signature, kyePair.getPublic)
     println(s"is valid: $valid")

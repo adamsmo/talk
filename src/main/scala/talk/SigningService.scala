@@ -31,7 +31,7 @@ object SigningService {
            privateKey: AsymmetricKeyParameter): ECDSASignature = {
 
     val kCalculator = new RandomDSAKCalculator()
-    //val kCalculator = new DiceKCalculator()
+    //val kCalculator = new Calculator()
 
     val signer = new ECDSASigner(kCalculator)
     signer.init(true, privateKey)
@@ -45,8 +45,7 @@ object SigningService {
   def verify(message: Array[Byte],
              signature: ECDSASignature,
              publicKey: AsymmetricKeyParameter): Boolean = {
-    val kCalculator = new RandomDSAKCalculator()
-    val signer = new ECDSASigner(kCalculator)
+    val signer = new ECDSASigner()
     signer.init(false, publicKey)
     signer.verifySignature(message, signature.r, signature.s)
   }
