@@ -10,7 +10,7 @@ object SecondDeployment {
     val kp = SigningService.keyPairFromPrivate(D)
 
     val token = Token("uuid", 4242424242L)
-    val signature = SigningService.sign(token.bytesForSigning, kp)
+    val signature = SigningService.sign(token.bytesForSigning, kp.getPrivate)
 
     println("r1")
     println(signature.r)
@@ -18,7 +18,7 @@ object SecondDeployment {
     println(signature.s)
 
     val token2 = Token("uuid", 4242424243L)
-    val signature2 = SigningService.sign(token2.bytesForSigning, kp)
+    val signature2 = SigningService.sign(token2.bytesForSigning, kp.getPrivate)
 
     println("r2")
     println(signature2.r)

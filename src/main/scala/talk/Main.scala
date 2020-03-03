@@ -12,20 +12,22 @@ object Main {
     val privateKey =
       "44020329788893490135623262343737356251704756286890709590024382843043053401949"
     val D = new BigInteger(privateKey)
-    val kp = SigningService.keyPairFromPrivate(D)
+    val kyePair = SigningService.keyPairFromPrivate(D)
 
     println("==============keys==============")
-    println(kp.getPrivate.asInstanceOf[ECPrivateKeyParameters].getD)
-    println(kp.getPublic.asInstanceOf[ECPublicKeyParameters].getQ)
+    println(kyePair.getPrivate.asInstanceOf[ECPrivateKeyParameters].getD)
+    println(kyePair.getPublic.asInstanceOf[ECPublicKeyParameters].getQ)
     println("==============keys==============")
+    println
+    println
 
     val token = Token("uuid", 4242424242L)
-    val signature = SigningService.sign(token.bytesForSigning, kp)
+    val signature = SigningService.sign(token.bytesForSigning, kyePair.getPrivate)
 
-    println("r1")
-    println(signature.r)
-    println("s1")
-    println(signature.s)
+    println(s"r ${signature.r}")
+    println(s"s ${signature.s}")
 
+    val valid = SigningService.verify(token.bytesForSigning, signature, kyePair.getPublic)
+    println(s"is valid: $valid")
   }
 }

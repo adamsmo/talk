@@ -8,6 +8,7 @@ import org.bouncycastle.asn1.x9.X9ECParameters
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator
 import org.bouncycastle.crypto.params.{
+  AsymmetricKeyParameter,
   ECDomainParameters,
   ECKeyGenerationParameters,
   ECPrivateKeyParameters,
@@ -27,18 +28,27 @@ object SigningService {
   )
 
   def sign(message: Array[Byte],
-           keyPair: AsymmetricCipherKeyPair): ECDSASignature = {
+           privateKey: AsymmetricKeyParameter): ECDSASignature = {
 
-    //val kCalculator = new RandomDSAKCalculator()
-    val kCalculator = new DiceKCalculator()
+    val kCalculator = new RandomDSAKCalculator()
+    //val kCalculator = new DiceKCalculator()
 
     val signer = new ECDSASigner(kCalculator)
-    signer.init(true, keyPair.getPrivate)
+    signer.init(true, privateKey)
     val components = signer.generateSignature(message)
-    val r = components(0)
+    val x = components(0)
     val s = components(1)
 
-    ECDSASignature(r, s)
+    ECDSASignature(x, s)
+  }
+
+  def verify(message: Array[Byte],
+             signature: ECDSASignature,
+             publicKey: AsymmetricKeyParameter): Boolean = {
+    val kCalculator = new RandomDSAKCalculator()
+    val signer = new ECDSASigner(kCalculator)
+    signer.init(false, publicKey)
+    signer.verifySignature(message, signature.r, signature.s)
   }
 
   def generateKeyPair(): AsymmetricCipherKeyPair = {
@@ -59,4 +69,4 @@ object SigningService {
   }
 }
 
-case class ECDSASignature(r: BigInt, s: BigInt)
+case class ECDSASignature(r: BigInteger, s: BigInteger)

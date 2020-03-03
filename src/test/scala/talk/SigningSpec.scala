@@ -24,7 +24,7 @@ class SigningSpec extends FlatSpec with Matchers {
       )
 
     //when
-    val signature = SigningService.sign(token.bytesForSigning, kp)
+    val signature = SigningService.sign(token.bytesForSigning, kp.getPrivate)
 
     //then
     signature shouldBe expected
